@@ -160,7 +160,7 @@ def title (interventions,mon_dict,gamma,r,dr,num_steps,**_):
 def shorten (a,detail): return ','.join(a.split(',')[:detail])
 
 
-def plot_regions (mu_range,s_range,num_sqs,detail,colormap="cet_rainbow4",f=0.75,fname=None,**params):
+def plot_regions (mu_range,s_range,num_sqs,detail,colormap="cet_rainbow4",f=0.75,fname=None,pts_to_plot=None,**params):
     pts,actions,step_sizes,(mus,ss) = assign_actions(mu_range,s_range,num_sqs,detail,
         **params)
 
@@ -202,6 +202,12 @@ def plot_regions (mu_range,s_range,num_sqs,detail,colormap="cet_rainbow4",f=0.75
     patches = [ mpatches.Patch(color=colour_key[k], label=k) for k in colour_key if k in reduced_actions]
     # put those patched as legend-handles into the legend
     plt.legend(handles=patches)
+
+    # add reference points to the phase plot, eg states in a time series
+    if not pts_to_plot is None:
+        pt_mus = [int((mu-mus[0])/step_sizes[0]) for mu,_ in pts_to_plot]
+        pt_dns = [int((dn-ss[0])/step_sizes[1]) for _,dn in pts_to_plot]
+        ax.plot(pt_dns,pt_mus, 'ko')
 
     plt.show()
 

@@ -1,4 +1,5 @@
 import plotting_functions
+import simulations
 import math
 
 # "control" parameters
@@ -133,3 +134,36 @@ plotting_functions.varying_frontiers(set_cm,
 plotting_functions.varying_frontiers(set_err, [0,.2,.4,.6,.8,1],'err_mon','monitor',(0,2),s_range,
                                            num_pts=100,cmap_name='cet_bmy',include_title=False,**params)
 
+
+# plots for the simulations and case study
+
+# parameters & initial values for the fire ant case study
+fa_init_dn = 2
+fa_init_mu = .25
+fa_init_n = math.log(fa_init_mu) - fa_init_dn**2/2
+fire_ant_params = {'gamma': 0.9, 'num_steps': 2, 'detail': None, 'r': 2.82, 'dr': 0.015, 
+                'interventions': {'ignore': (0.0, 0.0), 'control': (31.82244784482759, 0.9989054351771577)}, 
+                'mon_dict': {'monitor': (6.204010721551725, 0, 0)}, 'seq_len':5}
+
+
+from scipy.stats import norm
+import pandas as pd
+
+# plot timeseries as a sequence of actions and states
+q = .8
+fa_init_true_n = norm.ppf(q, loc=fa_init_n, scale=fa_init_dn)
+seq = simulations.run_sim(fa_init_true_n, fa_init_n, fa_init_dn, **fire_ant_params)[0]['full']
+simulations.plot_seq(pd.DataFrame(seq))
+
+
+# add timeseries to phase plot
+
+s_range = (0,3)
+mu_range = (0,1)
+num_sqs = 1000
+
+pts = [(math.exp(d['n'] + d['dn']**2/2), d['dn']) for d in seq]
+plotting_functions.plot_regions(mu_range,s_range,num_sqs,pts_to_plot=pts,**fire_ant_params)
+
+# plot payoffs for the naive & full models
+simulations.plot_payoffs(init_mu=0.3, init_dn=1.8, num_sims=1000, num_qs=100, **params)

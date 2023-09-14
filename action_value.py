@@ -74,14 +74,6 @@ def single_Q_monitor (mon_a, n, dn, mon_dict, gamma, r, dr, interventions, num_s
     return reward(n,dn) + cost + gamma*future
 
 
-# compute all action value functions,
-# this is done more efficiently for the plots themselves
-def Q_all (n,dn,mon_dict,gamma,r,dr,interventions,num_steps):
-    Q_dict = Q_interventions(n,dn,gamma,r,dr,interventions,num_steps)
-    Q_mon = Q_mon(n,dn,mon_dict,gamma,r,dr,interventions,num_steps,num_steps)
-    Q_dict.update(Q_mon)
-    return Q_dict
-
 def Q_mon (n,dn,mon_dict,gamma,r,dr,interventions,num_steps,waiting_steps=None,**_):
     if waiting_steps is None: max_waiting = num_steps-2
     else: max_waiting = min(num_steps-2,waiting_steps)
@@ -126,3 +118,10 @@ def Q_mon (n,dn,mon_dict,gamma,r,dr,interventions,num_steps,waiting_steps=None,*
     
     return vals
 
+# compute all action value functions,
+# this is done more efficiently for the plots themselves
+def Q_all (n,dn,mon_dict,gamma,r,dr,interventions,num_steps,**_):
+    Q_dict = Q_interventions(n,dn,gamma,r,dr,interventions,num_steps)
+    Q_mon_actions = Q_mon(n,dn,mon_dict,gamma,r,dr,interventions,num_steps,num_steps)
+    Q_dict.update(Q_mon_actions)
+    return Q_dict

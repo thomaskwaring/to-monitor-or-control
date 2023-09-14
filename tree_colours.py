@@ -102,28 +102,3 @@ def display_colours (params, colourkey, cmap_name, f):
         ax.text(x=x*256,y=-2,s=a,rotation=45)
 
     plt.show()
-
-if __name__ == '__main__':
-    colourkey = {'ignore,ignore': (0.02299, 0.013186, 0.65685, 1.0), 'ignore,control': (0.061046, 0.16876, 0.84821, 1.0), 
-        'control,ignore': (0.020504, 0.48833, 0.66546, 1.0), 'control,control': (0.18661, 0.60658, 0.31324, 1.0), 
-        'control,monitor': (0.32139, 0.69434, 0.033329, 1.0), 'control^2,ignore': (0.73344, 0.82256, 0.010097, 1.0), 
-        'control^2,control': (0.91587, 0.87364, 0.007481, 1.0), 'control^2,monitor': (0.9836, 0.7929, 0.046668, 1.0), 
-        'monitor': (0.99793, 0.34521, 0.057722, 1.0)}
-
-    ce = 4
-    rho=0.6
-    interventions = {'ignore':(0.0,0.0), 'control':(ce,rho), 'control^2':(2*ce,1-(1-rho)**2)}
-    cm=1
-    mon_dict = {'monitor':(cm,.1,0)}
-
-    key_d = {a:rho for a,(_,rho) in interventions.items()}
-    key_d.update({a:(1+cost) for a,(cost,_,_) in mon_dict.items()})
-    atree = Tree('',children=forest_from_list(colourkey.keys(),key=key_d.get))
-
-    display_colours(atree, 'cet_rainbow4', colourkey)
-
-    # scalar_d = colours_dict(atree, f=0.75)
-    # cmap = plt.get_cmap('cet_rainbow4')
-    # colours_d = {a:tuple(map(lambda x: x*256, cmap(x))) for a,x in scalar_d.items()}
-    # for a in colours_d:
-    #     print(f'{a}\t{colours_d[a]}')
