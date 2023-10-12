@@ -61,6 +61,7 @@ def update_seqs (policy_seqs, growth_seq, actions, **params):
 
     return (policy_seqs, growth_seq)
 
+# run the simulation
 def run_sim (init_true_n, init_n, init_dn, seq_len=None, **params):
 
     init_policy_state = dict(true_n=init_true_n,
@@ -90,6 +91,8 @@ def run_sim (init_true_n, init_n, init_dn, seq_len=None, **params):
 
     return policy_seqs, final_rewards
 
+# plot a histogram of rewards over many simulations
+# compare the naive and full model
 def plot_batch (init_n, init_dn, num_sims, **params):
 
     returns = {'naive':[], 'full':[]}
@@ -118,6 +121,7 @@ def plot_batch (init_n, init_dn, num_sims, **params):
     ax.legend()
     plt.show()
 
+# run simulations for a range of quantiles
 def run_representatives (init_n, init_dn, qs, seq_len=None, **params):
 
     for q in qs:
@@ -137,6 +141,7 @@ def run_representatives (init_n, init_dn, qs, seq_len=None, **params):
 
         print(pd.Series(rews))
 
+# plot the timeseries sequence
 def plot_seq (seq):
 
     action_alpha = 0.3
@@ -182,6 +187,7 @@ def plot_seq (seq):
     plt.tight_layout()
     plt.show()
 
+# plot the expected payoff as the quantile varies
 def plot_payoffs (init_mu, init_dn, num_sims = 1, num_qs=50, **params):
     init_n = log(init_mu) - init_dn**2/2
     qs = np.linspace(0,1,num_qs, endpoint=False)

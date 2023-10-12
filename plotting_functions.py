@@ -160,7 +160,7 @@ def title (interventions,mon_dict,gamma,r,dr,num_steps,**_):
 def shorten (a,detail): return ','.join(a.split(',')[:detail])
 
 
-def plot_regions (mu_range,s_range,num_sqs,detail,colormap="cet_rainbow4",f=0.75,fname=None,pts_to_plot=None,**params):
+def plot_regions (mu_range,s_range,num_sqs,detail=None,colormap="cet_rainbow4",f=0.75,fname=None,pts_to_plot=None,plot_title=False,**params):
     pts,actions,step_sizes,(mus,ss) = assign_actions(mu_range,s_range,num_sqs,detail,
         **params)
 
@@ -190,7 +190,8 @@ def plot_regions (mu_range,s_range,num_sqs,detail,colormap="cet_rainbow4",f=0.75
 
     ax.set_xlabel('uncertainty')
     ax.set_ylabel('abundance', labelpad = 10)
-    # ax.set_title(title(**params))
+    if plot_title:
+        ax.set_title(title(**params))
 
 
     rescaler_x = ticker.FuncFormatter(lambda x, pos: f'{ss[0]+x*step_sizes[1] : .1f}')
