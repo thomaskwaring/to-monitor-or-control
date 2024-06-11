@@ -160,7 +160,8 @@ def title (interventions,mon_dict,gamma,r,dr,num_steps,**_):
 def shorten (a,detail): return ','.join(a.split(',')[:detail])
 
 
-def plot_regions (mu_range,s_range,num_sqs,detail=None,colormap="cet_rainbow4",f=0.75,fname=None,pts_to_plot=None,plot_title=False,**params):
+def plot_regions (mu_range,s_range,num_sqs,detail=None,colormap="cet_rainbow4",f=0.75,
+                  fname=None,pts_to_plot=None,plot_title=False,savename=None,**params):
     pts,actions,step_sizes,(mus,ss) = assign_actions(mu_range,s_range,num_sqs,detail,
         **params)
 
@@ -210,6 +211,8 @@ def plot_regions (mu_range,s_range,num_sqs,detail=None,colormap="cet_rainbow4",f
         pt_dns = [int((dn-ss[0])/step_sizes[1]) for _,dn in pts_to_plot]
         ax.plot(pt_dns,pt_mus, 'ko')
 
+    if not savename is None:
+        plt.savefig(f'figs/{savename}.png', dpi=300)
     plt.show()
 
     red_ckey = {a:colour_key[a] for a in reduced_actions}
@@ -305,7 +308,8 @@ def find_frontiers (mu_range,num_pts,fst_guess,s_range,**params):
     return lines
 
 def varying_frontiers (param_setter, param_values, name, action, mu_range, 
-                       s_range, num_pts, cmap_name, include_title=True, **params):
+                       s_range, num_pts, cmap_name, include_title=True,
+                        savename=None, **params):
     
     fig,ax = plt.subplots()
 
@@ -329,9 +333,12 @@ def varying_frontiers (param_setter, param_values, name, action, mu_range,
     ax.set_xlabel('uncertainty')
     ax.set_ylabel('abundance')
     if include_title: ax.set_title('Monitoring boundary')
+    if not savename is None:
+        plt.savefig(f'figs/{savename}.png', dpi=300)
     plt.show()
 
-def varying_crossovers (param_setter, param_range, name, mu_range, num_pts, cmap_name, include_title=True, **params):
+def varying_crossovers (param_setter, param_range, name, mu_range, num_pts, cmap_name, include_title=True, 
+                        savename=None,**params):
 
     param_vals,p_step = np.linspace(*param_range, num=num_pts, retstep=True)
     mu_vals,mu_step = np.linspace(*mu_range, num=num_pts, retstep=True)
@@ -389,4 +396,6 @@ def varying_crossovers (param_setter, param_range, name, mu_range, num_pts, cmap
     ax.yaxis.set_major_formatter(rescaler_y)
     ax.xaxis.set_major_formatter(rescaler_x)
 
+    if not savename is None:
+        plt.savefig(f'figs/{savename}.png', dpi=300)
     plt.show()

@@ -142,7 +142,7 @@ def run_representatives (init_n, init_dn, qs, seq_len=None, **params):
         print(pd.Series(rews))
 
 # plot the timeseries sequence
-def plot_seq (seq):
+def plot_seq (seq, savename=None):
 
     action_alpha = 0.3
     action_colours = {a:action_base_colours[a] + hex(int(256 * action_alpha))[2:] for a in action_base_colours}
@@ -185,10 +185,13 @@ def plot_seq (seq):
     ax.set_title('Simulated time series: fire ant case study')
 
     plt.tight_layout()
+    
+    if not savename is None:
+        plt.savefig(f'figs/{savename}.png', dpi=300)
     plt.show()
 
 # plot the expected payoff as the quantile varies
-def plot_payoffs (init_mu, init_dn, num_sims = 1, num_qs=50, **params):
+def plot_payoffs (init_mu, init_dn, num_sims = 1, num_qs=50, savename=None, **params):
     init_n = log(init_mu) - init_dn**2/2
     qs = np.linspace(0,1,num_qs, endpoint=False)
 
@@ -217,6 +220,9 @@ def plot_payoffs (init_mu, init_dn, num_sims = 1, num_qs=50, **params):
     ax.set_title(f'expected payoffs, init_mu={init_mu:.2f} init_dn={init_dn:.2f} over {params["num_steps"]} steps')
     ax.set_xlabel('initial true abundance (quantile)')
     ax.set_ylabel('final cost')
+
+    if not savename is None:
+        plt.savefig(f'figs/{savename}.png', dpi=300)
     plt.show()
 
 

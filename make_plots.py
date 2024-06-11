@@ -80,11 +80,11 @@ gould = 'cet_gouldian'
 
 # figure 1
 plotting_functions.plot_regions(mu_range,s_range,num_sqs,detail,
-    colormap=rainbow,fname=None,**simple_params)
+    colormap=rainbow,fname=None,savename='fig1',**simple_params)
 
 # figure 2
 plotting_functions.plot_regions(mu_range,s_range,num_sqs,detail,
-    colormap=rainbow,fname=None,**params)
+    colormap=rainbow,fname=None,savename='fig2a',**params)
 
 
 # if fname is not None, the above saves data into a file
@@ -132,16 +132,20 @@ gamma_ps_simple = ('gamma', (0.5,0.9), 'gamma')
 
 # figure 3
 plotting_functions.varying_crossovers(*ce_ps, mu_range=(0,2),
-                                            num_pts=1000, cmap_name=gould, detail=2, include_title=False, **params)
+                                            num_pts=1000, cmap_name=gould, detail=2, include_title=False, 
+                                            savename='fig3a',**params)
 plotting_functions.varying_crossovers(*rho_ps, mu_range=(0,2),
-                                            num_pts=1000, cmap_name=gould, detail=2, include_title=False, **params)
+                                            num_pts=1000, cmap_name=gould, detail=2, include_title=False, 
+                                            savename='fig3b',**params)
 
 # figure 4
 plotting_functions.varying_frontiers(set_cm, 
                                            [.5,1,1.5,2],'cm','monitor',(0,2),s_range,
-                                           num_pts=100,cmap_name='cet_bmy',include_title=False,**params)
+                                           num_pts=100,cmap_name='cet_bmy',include_title=False,
+                                           savename='fig4a',**params)
 plotting_functions.varying_frontiers(set_err, [0,.2,.4,.6,.8,1],'err_mon','monitor',(0,2),s_range,
-                                           num_pts=100,cmap_name='cet_bmy',include_title=False,**params)
+                                           num_pts=100,cmap_name='cet_bmy',include_title=False,
+                                           savename='fig4b',**params)
 
 
 
@@ -160,23 +164,26 @@ from scipy.stats import norm
 import pandas as pd
 
 
-# ----------- plot timeseries as a sequence of actions and states
+# ----------- plot payoffs for the naive & full models, figure 5
+
+params['seq_len'] = 5
+simulations.plot_payoffs(init_mu=0.3, init_dn=1.8, num_sims=1000, num_qs=100, savename='fig5', **params)
+
+
+# ----------- plot timeseries as a sequence of actions and states, figure 6
 
 q = .8
 fa_init_true_n = norm.ppf(q, loc=fa_init_n, scale=fa_init_dn)
-seq = simulations.run_sim(fa_init_true_n, fa_init_n, fa_init_dn, seq_len=5, **fire_ant_params)[0]['full']
-simulations.plot_seq(pd.DataFrame(seq))
+seq = simulations.run_sim(fa_init_true_n, fa_init_n, fa_init_dn, **fire_ant_params)[0]['full']
+simulations.plot_seq(pd.DataFrame(seq), savename='fig6a')
 
 
-# ----------- add timeseries to phase plot
+# # ----------- add timeseries to phase plot
 
-s_range = (0,3)
+# s_range = (0,3)
 mu_range = (0,1)
 num_sqs = 1000
 
 pts = [(math.exp(d['n'] + d['dn']**2/2), d['dn']) for d in seq]
-plotting_functions.plot_regions(mu_range,s_range,num_sqs,pts_to_plot=pts,**fire_ant_params)
+plotting_functions.plot_regions(mu_range,s_range,num_sqs,pts_to_plot=pts,savename='fig6b',**fire_ant_params)
 
-# ----------- plot payoffs for the naive & full models
-
-simulations.plot_payoffs(init_mu=0.3, init_dn=1.8, num_sims=1000, num_qs=100, **params)
